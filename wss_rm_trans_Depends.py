@@ -31,8 +31,8 @@ def main():
         response = requests.post(api_url, 
                                 headers = request_headers, 
                                 data=json.dumps(request_data))
-    except requests.exceptions.RequestException as e:  # This is the correct syntax
-        raise SystemExit(e)
+    except requests.exceptions.RequestException as exceptionText:  # This is the correct syntax
+        raise SystemExit(exceptionText)
 
     print("Grabbing all Product Tokens : {}".format(response))
 
@@ -63,8 +63,8 @@ def main():
             response = requests.post(api_url, 
                                     headers = request_headers, 
                                     data=json.dumps(request_data))
-        except requests.exceptions.RequestException as e:  # This is the correct syntax
-            raise SystemExit(e)
+        except requests.exceptions.RequestException as exceptionText:  # This is the correct syntax
+            raise SystemExit(exceptionText)
         
         print("Grabbing all Project Tokens : {}".format(response))
 
@@ -95,8 +95,8 @@ def main():
             response = requests.post(api_url, 
                                     headers = request_headers, 
                                     data=json.dumps(request_data))
-        except requests.exceptions.RequestException as e:  # This is the correct syntax
-            raise SystemExit(e)
+        except requests.exceptions.RequestException as exceptionText:  # This is the correct syntax
+            raise SystemExit(exceptionText)
 
         print("\nGrabbing all Alerts Based on Project Tokens : {}".format(response))
 
@@ -140,8 +140,8 @@ def main():
             response = requests.post(api_url, 
                                     headers = request_headers, 
                                     data=json.dumps(request_data))
-        except requests.exceptions.RequestException as e:  # This is the correct syntax
-            raise SystemExit(e)
+        except requests.exceptions.RequestException as exceptionText:  # This is the correct syntax
+            raise SystemExit(exceptionText)
 
         # Meant to run on a schedules, tells you how many Dependencies were ignored
         print("Removing Transitive Dependencies: {}\n".format(response))

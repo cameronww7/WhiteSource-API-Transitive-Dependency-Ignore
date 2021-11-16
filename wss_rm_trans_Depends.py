@@ -6,8 +6,8 @@ import requests
 import time
 
 ## Global Vars 
-user_key        = sys.argv[1]
-org_token       = sys.argv[2]
+user_key        = sys.argv[1] # Passed via Arg 1
+org_token       = sys.argv[2] # Passed via Arg 2
 api_url         = "https://app.whitesourcesoftware.com/api/v1.3"
 request_headers = {'Content-type': 'application/json'}
 
@@ -32,9 +32,11 @@ def main():
     print("Grabbing all Product Tokens : {}".format(response))
 
     productJsonGlob = json.loads(response.content)
+    # Used for Debuging
     #print(json.dumps(productJsonGlob, indent=2, sort_keys=True))
 
     for item in productJsonGlob["products"]:
+        # Used for Debuging
         #print("{}:{}".format(item["productName"],item["productToken"]))
         allProductsTokens.append(item["productToken"])
 
@@ -58,10 +60,11 @@ def main():
         print("Grabbing all Project Tokens : {}".format(response))
 
         projectJsonGlob = json.loads(response.content)
-    
+        # Used for Debuging
         #print(json.dumps(projectJsonGlob, indent=2, sort_keys=True))
 
         for item in projectJsonGlob["projects"]:
+            # Used for Debuging
             #print("{}:{}".format(item["projectName"],item["projectToken"]))
             allProjectsTokens.append(item["projectToken"])
 
@@ -93,9 +96,11 @@ def main():
         # - - - - - - - - - - - - - - - - - - - - - - - - 
         for alert in projectAlertsGlob["alerts"]:
             if "{}".format(alert["directDependency"]) == "False":
+                # Used for Debuging
                 #print("False:{}".format(alert["directDependency"]))
                 alertsUUIDGlob.append("{}".format(alert["alertUuid"]))
             #else:
+                # Used for Debuging
                 #print("True:{}".format(alert["directDependency"]))
         
         print("Ignore Alerts Array:{}".format(alertsUUIDGlob))
@@ -109,7 +114,6 @@ def main():
         request_data = {
             "requestType" : "ignoreAlerts",
             "userKey" : user_key,
-            #"orgToken" : org_token,
             "projectToken" : "{}".format(project),
             "alertUuids" : alertsUUIDGlob,
             "comments": "Transitive Dependencies (We do Not Fix Third Party Code)"
@@ -126,6 +130,9 @@ def main():
 
     print("\n\n-- END OF SCRIPT --\n\n")
 
+
+    # Used for Debuging
+    # - - - - - - - - - - - - - - - - - - - - - - - - 
     # request_data = {
     #     "requestType" : "getProjectAlerts",
     #     "userKey" : user_key,

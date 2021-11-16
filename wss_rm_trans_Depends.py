@@ -37,6 +37,7 @@ def main():
     print("Grabbing all Product Tokens : {}".format(response))
 
     productJsonGlob = json.loads(response.text)
+
     # Used for Debuging
     #print(json.dumps(productJsonGlob, indent=2, sort_keys=True))
 
@@ -69,6 +70,7 @@ def main():
         print("Grabbing all Project Tokens : {}".format(response))
 
         projectJsonGlob = json.loads(response.content)
+
         # Used for Debuging
         #print(json.dumps(projectJsonGlob, indent=2, sort_keys=True))
 
@@ -104,6 +106,7 @@ def main():
 
         print("Number of Alerts:{}".format(len(projectAlertsGlob["alerts"])))
 
+        # reinitialize's the list back to null each loop
         alertsUUIDGlob = []
 
         # Parse out all ""directDependency": false"

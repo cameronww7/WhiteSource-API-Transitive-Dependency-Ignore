@@ -26,12 +26,17 @@ def main():
         "userKey" : user_key,
         "orgToken" : org_token,
     }
-    response = requests.post(api_url, 
-                            headers = request_headers, 
-                            data=json.dumps(request_data))
+
+    try:
+        response = requests.post(api_url, 
+                                headers = request_headers, 
+                                data=json.dumps(request_data))
+    except requests.exceptions.RequestException as e:  # This is the correct syntax
+        raise SystemExit(e)
+
     print("Grabbing all Product Tokens : {}".format(response))
 
-    productJsonGlob = json.loads(response.content)
+    productJsonGlob = json.loads(response.text)
     # Used for Debuging
     #print(json.dumps(productJsonGlob, indent=2, sort_keys=True))
 
@@ -54,9 +59,13 @@ def main():
             "productToken" : "{}".format(product),
         }
 
-        response = requests.post(api_url, 
-                                headers = request_headers, 
-                                data=json.dumps(request_data))
+        try:
+            response = requests.post(api_url, 
+                                    headers = request_headers, 
+                                    data=json.dumps(request_data))
+        except requests.exceptions.RequestException as e:  # This is the correct syntax
+            raise SystemExit(e)
+        
         print("Grabbing all Project Tokens : {}".format(response))
 
         projectJsonGlob = json.loads(response.content)
@@ -74,6 +83,7 @@ def main():
     # Parse out Alerts based on each Project
     # - - - - - - - - - - - - - - - - - - - - - - - - 
     for project in allProjectsTokens:
+        # Sleep to prevent request limit
         time.sleep(2)
         request_data = {
             "requestType" : "getProjectAlerts",
@@ -81,9 +91,13 @@ def main():
             "projectToken" : project,
         }
 
-        response = requests.post(api_url, 
-                                headers = request_headers, 
-                                data=json.dumps(request_data))
+        try:
+            response = requests.post(api_url, 
+                                    headers = request_headers, 
+                                    data=json.dumps(request_data))
+        except requests.exceptions.RequestException as e:  # This is the correct syntax
+            raise SystemExit(e)
+
         print("\nGrabbing all Alerts Based on Project Tokens : {}".format(response))
 
         projectAlertsGlob = json.loads(response.content)
@@ -119,10 +133,17 @@ def main():
             "comments": "Transitive Dependencies (We do Not Fix Third Party Code)"
         }
 
+        # Sleep to prevent request limit
         time.sleep(2)
-        response = requests.post(api_url, 
-                                headers = request_headers, 
-                                data=json.dumps(request_data))
+
+        try:
+            response = requests.post(api_url, 
+                                    headers = request_headers, 
+                                    data=json.dumps(request_data))
+        except requests.exceptions.RequestException as e:  # This is the correct syntax
+            raise SystemExit(e)
+
+        # Meant to run on a schedules, tells you how many Dependencies were ignored
         print("Removing Transitive Dependencies: {}\n".format(response))
 
 

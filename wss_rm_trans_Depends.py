@@ -34,7 +34,7 @@ def main():
     except requests.exceptions.RequestException as exceptionText:  # This is the correct syntax
         raise SystemExit(exceptionText)
 
-    print("Grabbing all Product Tokens : {}".format(response))
+    print("Grabbing all Product Tokens : {} - {}\n".format(response, response.text))
 
     productJsonGlob = json.loads(response.text)
 
@@ -51,8 +51,6 @@ def main():
     # Get All Projects Tokens
     # - - - - - - - - - - - - - - - - - - - - - - - - 
     for product in allProductsTokens:
-        # Sleep to prevent request limit
-        time.sleep(3)
 
         request_data = {
             "requestType" : "getAllProjects",
@@ -67,7 +65,7 @@ def main():
         except requests.exceptions.RequestException as exceptionText:  # This is the correct syntax
             raise SystemExit(exceptionText)
         
-        print("Grabbing all Project Tokens : {}".format(response))
+        print("Grabbing all Project Tokens : {} - {}\n".format(response, response.text))
 
         projectJsonGlob = json.loads(response.content)
 
@@ -85,8 +83,6 @@ def main():
     # Parse out Alerts based on each Project
     # - - - - - - - - - - - - - - - - - - - - - - - - 
     for project in allProjectsTokens:
-        # Sleep to prevent request limit
-        time.sleep(2)
         request_data = {
             "requestType" : "getProjectAlerts",
             "userKey" : user_key,
@@ -94,15 +90,15 @@ def main():
         }
 
         try:
-            response = requests.post(api_url, 
+            responseProject = requests.post(api_url, 
                                     headers = request_headers, 
                                     data=json.dumps(request_data))
         except requests.exceptions.RequestException as exceptionText:  # This is the correct syntax
             raise SystemExit(exceptionText)
 
-        print("\nGrabbing all Alerts Based on Project Tokens : {}".format(response))
+        print("\nGrabbing all Alerts Based on Project Tokens : {}\n".format(responseProject))
 
-        projectAlertsGlob = json.loads(response.content)
+        projectAlertsGlob = json.loads(responseProject.content)
 
         print("Number of Alerts:{}".format(len(projectAlertsGlob["alerts"])))
 
@@ -125,29 +121,25 @@ def main():
 
         numberOfIgnoredAlerts = numberOfIgnoredAlerts + int(len(alertsUUIDGlob))
 
-
         # Take Parsed directDependencies and set WhiteSource to Ignore the Alerts
         # - - - - - - - - - - - - - - - - - - - - - - - - 
         request_data = {
             "requestType" : "ignoreAlerts",
             "userKey" : user_key,
-            "projectToken" : "{}".format(project),
+            "orgToken" : org_token,
             "alertUuids" : alertsUUIDGlob,
             "comments": "Transitive Dependencies (We do Not Fix Third Party Code)"
         }
 
-        # Sleep to prevent request limit
-        time.sleep(2)
-
         try:
-            response = requests.post(api_url, 
+            responseIgnore = requests.post(api_url, 
                                     headers = request_headers, 
                                     data=json.dumps(request_data))
         except requests.exceptions.RequestException as exceptionText:  # This is the correct syntax
             raise SystemExit(exceptionText)
 
         # Meant to run on a schedules, tells you how many Dependencies were ignored
-        print("Removing Transitive Dependencies: {}\n".format(response))
+        print("Removing Transitive Dependencies: {} - {}\n".format(responseIgnore, responseIgnore.text))
 
 
     print("\n\nNumber Of Alerts Ignored : {}\n\n".format(numberOfIgnoredAlerts))
@@ -166,7 +158,7 @@ def main():
     # response = requests.post(api_url, 
     #                         headers = request_headers, 
     #                         data=json.dumps(request_data))
-    # print("\nGrabbing all Alerts Based on Project Tokens : {}".format(response))
+    # print("\nGrabbing all Alerts Based on Project Tokens : {} - {}\n".format(response, response.text))
 
     # projectAlertsGlob = json.loads(response.content)
 
